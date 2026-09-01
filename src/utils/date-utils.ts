@@ -1,9 +1,16 @@
 import { siteConfig } from "../config";
 
 export function formatDateToYYYYMMDD(date: Date): string {
-	return date.toISOString().substring(0, 10);
+	const tz = siteConfig.timezone || "Asia/Shanghai";
+	const parts = new Intl.DateTimeFormat("en-CA", {
+		timeZone: tz,
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).formatToParts(date);
+	const get = (type) => parts.find((p) => p.type === type)?.value || "";
+	return `${get("year")}-${get("month")}-${get("day")}`;
 }
-
 // 国际化日期格式化函数
 export function formatDateI18n(
 	dateInput: Date | string,
@@ -26,10 +33,9 @@ export function formatDateI18n(
 	}
 
 	// 如果配置了时区，则将其用于格式化（IANA 时区字符串）
-	if (siteConfig.timezone) {
-		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
-	}
-
+	// 无论 siteConfig 是否显式配置时区，强制保证渲染使用北京时间语义：
+	//   - 显式配置了 → 用配置值；- 未配置 → 默认 Asia/Shanghai（Cloudflare Pages build 机为 UTC）
+	(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone || "Asia/Shanghai";
 	// 语言代码映射
 	const localeMap: Record<string, string> = {
 		zh_CN: "zh-CN",
@@ -59,10 +65,13 @@ export function formatDateI18nWithTime(dateInput: Date | string): string {
 	return formatDateI18n(dateInput, true);
 }
 
-export function formatDynamicDate(dateInput: Date | string): string {
+export function formatDynamicDate(
+	dateInput: Date | string,
+	timezone: string = siteConfig.timezone || "Asia/Shanghai",
+): string {
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
 	const parts = new Intl.DateTimeFormat("en-CA", {
-		timeZone: "UTC",
+		timeZone: timezone,
 		year: "numeric",
 		month: "2-digit",
 		day: "2-digit",
