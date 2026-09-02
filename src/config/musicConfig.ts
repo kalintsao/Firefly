@@ -15,7 +15,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	volume: 0.7,
 
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
-	playMode: "random",
+	playMode: "list",
 
 	// 是否显启用歌词
 	showLyrics: false,
@@ -51,21 +51,21 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 				name: "出山",
 				artist: "出山/花粥&王胜娚",
 				url: "/assets/music/出山-花粥&王胜娚.mp3",
-				cover: "/assets/music/cover/bg1.webp",
+				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
 			},
 			{
 				name: "来自天堂的魔鬼",
 				artist: "来自天堂的魔鬼/G.E.M.邓紫棋",
 				url: "/assets/music/来自天堂的魔鬼-G.E.M.邓紫棋.mp3",
-				cover: "/assets/music/cover/bg2.webp",
+				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
 			},
 			{
 				name: "半糖主义",
 				artist: "半糖主义/S.H.E",
 				url: "/assets/music/半糖主义-S.H.E.mp3",
-				cover: "/assets/music/cover/bg3.webp",
+				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
 			},
 		],
