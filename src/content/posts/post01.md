@@ -6,7 +6,7 @@ description: 这是文章的简短描述
 tags:
   - 前端
   - 开发
-image: ./cover.jpg
+image: ./images/firefly2.avif
 category: 前端开发
 published: "2026-09-02 00:20:53 +0800"
 ---
