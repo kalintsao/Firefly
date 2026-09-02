@@ -1,7 +1,6 @@
 <script lang="ts">
 import { onMount, tick } from "svelte";
 import ClientPagination from "@/components/common/ClientPagination.svelte";
-import { formatTimezoneOffset } from "@/utils/date-utils";
 import { fetchMemos } from "@/utils/memos-adapter";
 import { registerDynamicGallery } from "./dynamic-gallery";
 import { registerDynamicInlineComments } from "./dynamic-inline-comments";
@@ -15,6 +14,8 @@ type DynamicImage = {
 type DynamicData = {
 	id: string;
 	published: number;
+	/** published 原文文本（自托管 dynamic 数据才有），前端直接显示不做时区换算 */
+	publishedText?: string;
 	html: string;
 	images: DynamicImage[];
 	searchText: string;
@@ -48,7 +49,6 @@ const {
 	noResultsText,
 	loadingText,
 	allYearsText,
-	timezone,
 	memos,
 }: Props = $props();
 
@@ -83,13 +83,21 @@ function updateUrl(clearHash = false) {
 	history.replaceState(history.state, "", current);
 }
 
+function entryYear(entry: DynamicData): string {
+	// 优先取 published 原文文本中的年份（与文件名/发布时间一致），
+	// 避免把 +0800 时间按 UTC 取年导致跨年偏移；无原文时回退 UTC 年份
+	return (
+		entry.publishedText?.slice(0, 4) ||
+		String(new Date(entry.published).getUTCFullYear())
+	);
+}
+
 function applyFilters(resetPage = true) {
 	const query = searchInput?.value.toLocaleLowerCase().trim() || "";
 	const year = yearSelect?.value || "all";
 	filtered = entries.filter(
 		(entry) =>
-			(year === "all" ||
-				String(new Date(entry.published).getUTCFullYear()) === year) &&
+			(year === "all" || entryYear(entry) === year) &&
 			(!query || entry.searchText.includes(query)),
 	);
 	if (resetPage) currentPage = 1;
@@ -105,11 +113,7 @@ function populateYears() {
 	all.value = "all";
 	all.textContent = allYearsText;
 	yearSelect.append(all);
-	const years = [
-		...new Set(
-			entries.map((entry) => new Date(entry.published).getUTCFullYear()),
-		),
-	];
+	const years = [...new Set(entries.map((entry) => entryYear(entry)))];
 	for (const year of years) {
 		const option = document.createElement("option");
 		option.value = String(year);
@@ -128,7 +132,7 @@ function createItem(entry: DynamicData) {
 	permalinkUrl.hash = anchorId;
 	const permalink = `${permalinkUrl.pathname}${permalinkUrl.search}${permalinkUrl.hash}`;
 	root.id = anchorId;
-	root.dataset.year = String(new Date(entry.published).getUTCFullYear());
+	root.dataset.year = entryYear(entry);
 
 	const author = root.querySelector<HTMLElement>("[data-dynamic-author]");
 	if (author) {
@@ -158,8 +162,11 @@ function createItem(entry: DynamicData) {
 	if (time) {
 		const date = new Date(entry.published);
 		time.dateTime = date.toISOString();
-		// 第三方 API 和 Memos 使用浏览器本地时区，不做额外时区转换
-		if (source.startsWith("http") || memos?.enable) {
+		if (entry.publishedText) {
+			// 自托管 dynamic：直接显示 published 原文文本，不做任何时区换算
+			time.textContent = entry.publishedText;
+		} else {
+			// 第三方 API 和 Memos 无原文文本，使用浏览器本地时区
 			time.textContent = date.toLocaleDateString("zh-CN", {
 				year: "numeric",
 				month: "2-digit",
@@ -167,20 +174,6 @@ function createItem(entry: DynamicData) {
 				hour: "2-digit",
 				minute: "2-digit",
 			});
-		} else {
-			time.textContent = new Intl.DateTimeFormat(
-				document.documentElement.lang || undefined,
-				{
-					timeZone: "UTC",
-					year: "numeric",
-					month: "2-digit",
-					day: "2-digit",
-					hour: "2-digit",
-					minute: "2-digit",
-					second: "2-digit",
-				},
-			).format(date);
-			time.textContent += ` ${formatTimezoneOffset(timezone, date)}`;
 		}
 	}
 	const location = root.querySelector<HTMLElement>("[data-dynamic-location]");
