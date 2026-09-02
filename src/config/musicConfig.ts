@@ -50,7 +50,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 			{
 				name: "出山",
 				artist: "出山/花粥&王胜娚",
-				url: "/assets/music/出山-花粥&王胜娚.mp3",
+				url: "/assets/music/出山-花粥_王胜娚.mp3",
 				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
 			},
