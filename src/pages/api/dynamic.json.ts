@@ -5,6 +5,7 @@ import {
 	dynamicSlug,
 	sortDynamics,
 } from "@/utils/dynamic-utils";
+import { getPublishedText } from "@/utils/published-text";
 
 const markdownImagePattern = /!\[([^\]]*)\]\((\S+?)(?:\s+["']([^"']*)["'])?\)/g;
 
@@ -26,6 +27,8 @@ export async function GET(): Promise<Response> {
 			return {
 				id: dynamicSlug(entry.id),
 				published: entry.data.published.getTime(),
+				// published 原文文本（如 "2026-09-02 10:12:02 +0800"），前端直接显示，不做时区换算
+				publishedText: getPublishedText(entry.id),
 				html: rendered.code,
 				images,
 				searchText: dynamicSearchText(entry),
