@@ -40,7 +40,7 @@ const pages = resolvePageToggles({
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "KalinTsao",
+	title: "云林小筑",
 
 	// 站点副标题
 	subtitle: "个人博客",
@@ -60,12 +60,13 @@ export const siteConfig: SiteConfig = {
 		"Astro",
 		"Firefly",
 		"个人博客",
+		"云林小筑",
 	],
 
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: 160,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
 		defaultMode: "system",
 	},
