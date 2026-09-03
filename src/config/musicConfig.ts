@@ -48,23 +48,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "出山",
-				artist: "出山/花粥&王胜娚",
-				url: "/assets/music/出山-花粥_王胜娚.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
-				lrc: "",
-			},
-			{
-				name: "来自天堂的魔鬼",
-				artist: "来自天堂的魔鬼/G.E.M.邓紫棋",
-				url: "/assets/music/来自天堂的魔鬼-G.E.M.邓紫棋.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
-				lrc: "",
-			},
-			{
-				name: "半糖主义",
-				artist: "半糖主义/S.H.E",
-				url: "/assets/music/半糖主义-S.H.E.mp3",
+				name: "使一颗心免于哀伤",
+				artist: "知更鸟 / HOYO-MiX / Chevy",
+				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
 				cover: "/assets/music/cover/109951169585655912.webp",
 				lrc: "",
 			},
